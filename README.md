@@ -3,16 +3,10 @@
 - [Android Compose Tutorial](https://developer.android.com/jetpack/compose/tutorial?hl=ko)을 따라 공부한
   것을 정리하는 프로젝트 입니다.
 
-<br/>
-<br/>
-
 ### Basic
 
 - onCreate()에서 `setContent{}` 블럭이 Activity의 레이아웃을 만드는 코드에 해당한다.
 - `setContent{}`에서 Composable Function을 호출한다.
-
-<br/>
-<br/>
 
 ### Composable Function이란?
 
@@ -23,7 +17,7 @@
 
 - UI는 계층적으로 구성된다. 계층적인 UI는 Composable Function에서 다른 Composable Function을 호출함으로써 만들 수 있다.
 - 두개의 `Text()`를 연달아서 호출하면 각 텍스트 뷰에 대한 위치 지정을 하지 않았으므로 겹쳐서 나타나게 된다.  
-  ![TextLayout](/readme_resource/TextLayout.jpg)
+  ![TextLayout](./readme_resource/TextLayout.jpg)
 
 ### Column, Row
 
@@ -148,6 +142,9 @@ fun HelloContent() {
 }
 ```
 
+<br/>
+<br/>
+
 ## Compose 상태(state)
 
 - 여기서 상태(state)란 뷰가 담고 있는 혹은 표현하는 데이터를 의미한다.
@@ -230,27 +227,27 @@ class HelloViewModel : ViewModel() {
 
 @Composable
 fun HelloScreen(helloViewModel: HelloViewModel = viewModel()) {
-  var name: String by helloViewModel.name.observeAsState("")
-  HelloContent(name = name, onNameChange = { name = it })
+    var name: String by helloViewModel.name.observeAsState("")
+    HelloContent(name = name, onNameChange = { name = it })
 }
 
 @Composable
 fun HelloContent(name: String, onNameChange: (String) -> Unit) {
-  Text(
-    text = "Hello, $name",
-    modifer = Modifer.padding(bottom = 8.dp),
-    style = MaterialTheme.typography.h5
-  )
-  OutlinedTextField(
-    value = name,
-    onValueChaned = onNameChange(name),
-    label = { Text("Name") }
-  )
+    Text(
+        text = "Hello, $name",
+        modifer = Modifer.padding(bottom = 8.dp),
+        style = MaterialTheme.typography.h5
+    )
+    OutlinedTextField(
+        value = name,
+        onValueChaned = onNameChange(name),
+        label = { Text("Name") }
+    )
 }
 ```
 
 - 이렇게 Composable의 상태를 ViewModel에 보관하면, ViewModel은 View보다 생명주기가 길기 때문에,  
-configuration change가 발생하더라도 view의 상태를 유지할 수 있다. 
+  configuration change가 발생하더라도 view의 상태를 유지할 수 있다.
 
 - Composable의 상태를 바꾸는 함수도 viewModel로 hoisting하자.
 
@@ -258,7 +255,7 @@ configuration change가 발생하더라도 view의 상태를 유지할 수 있�
 class HelloViewModel : ViewModel() {
     private val _name = MutableLiveData("")
     val name: LiveData<String> = _name
-  
+
     fun onNameChange(newName: String) {
         _name.value = newName
     }
@@ -266,25 +263,25 @@ class HelloViewModel : ViewModel() {
 
 @Composable
 fun HelloScreen(helloViewModel: HelloViewModel = viewModel()) {
-  var name: String by helloViewModel.name.observeAsState("")
-  HelloContent(name = name, onNameChange = { helloViewModel.onNameChange(it) })
+    var name: String by helloViewModel.name.observeAsState("")
+    HelloContent(name = name, onNameChange = { helloViewModel.onNameChange(it) })
 }
 
 @Composable
 fun HelloContent(name: String, onNameChange: (String) -> Unit) {
-  Text(
-    text = "Hello, $name",
-    modifer = Modifer.padding(bottom = 8.dp),
-    style = MaterialTheme.typography.h5
-  )
-  OutlinedTextField(
-    value = name,
-    onValueChaned = onNameChange(name),
-    label = { Text("Name") }
-  )
+    Text(
+        text = "Hello, $name",
+        modifer = Modifer.padding(bottom = 8.dp),
+        style = MaterialTheme.typography.h5
+    )
+    OutlinedTextField(
+        value = name,
+        onValueChaned = onNameChange(name),
+        label = { Text("Name") }
+    )
 }
 ```
 
-- 이렇게 하면 ViewModel만이 view의 상태에 해당되는 `name`값을 바꾸는 개체가 된다.  
+- 이렇게 하면 ViewModel만이 view의 상태에 해당되는 `name`값을 바꾸는 개체가 된다.
 - 네트워크 통신 결과에 따라서 사용자에게 보여주는 화면이 바뀌어야 하듯, UI의 상태는 app의 다른 계층에 의해서도 바뀔 수 있다.    
-따라서 UI의 상태를 ViewModel로 캡슐화하여 ViewModel만 `name` 값을 바꿀 수 있도록 하는 것이 좋다.
+  따라서 UI의 상태를 ViewModel로 캡슐화하여 ViewModel만 `name` 값을 바꿀 수 있도록 하는 것이 좋다.
